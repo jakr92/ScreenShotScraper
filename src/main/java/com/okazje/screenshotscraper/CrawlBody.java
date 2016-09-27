@@ -7,7 +7,7 @@ package com.okazje.screenshotscraper;
 
 /**
  *
- * @author Krzysztof
+ * @author Krzysztof Jakubcewicz
  */
 public class CrawlBody {
     
