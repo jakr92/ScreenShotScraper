@@ -4,14 +4,13 @@
  * and open the template in the editor.
  */
 package com.okazje.screenshotscraper;
-//import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
@@ -24,16 +23,20 @@ import org.openqa.selenium.remote.DesiredCapabilities;
  * @author Krzysztof Jakubcewicz
  */
 public class CrawlBody {
-    public void crawling(){
+    public void crawling(String[] x, String wdPath, String fPath){
     DesiredCapabilities caps = new DesiredCapabilities();
     caps.setCapability("takesScreenshot", true);
-    caps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, "C:\\Users\\Krzysztof\\Documents\\NetBeansProjects\\ScreenShotScraper\\phantomjs-2.1.1-windows\\bin\\phantomjs.exe");
+    caps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, wdPath);
+
     PhantomJSDriver driver = new PhantomJSDriver(caps);
-    driver.get("http://www.youhome.pl/komoda.html");
+    for (int i=0; i < x.length; i++){
+    driver.get(x[i]);
     driver.manage().window().setSize(new Dimension(1240,1240));
- //SeleniumWaiter _waiter = new SeleniumWaiter(driver);
+    JavascriptExecutor js = ((JavascriptExecutor) driver);
+
+js.executeScript("window.scrollTo(0, document.body.scrollHeight)");
         try {
-            //   _waiter.waitForMe(By.cssSelector("#offer356782255_682 > div > a > img"),5000);
+           
             Thread.sleep(5000);
         } catch (InterruptedException ex) {
             Logger.getLogger(CrawlBody.class.getName()).log(Level.SEVERE, null, ex);
@@ -42,7 +45,7 @@ public class CrawlBody {
     File srcFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
     System.out.println("File:" + srcFile);
     try{
-    FileUtils.copyFile(srcFile, new File("C:/Java/screenshot_.png"));
+    FileUtils.copyFile(srcFile, new File(fPath+"/screenshot"+i+".png"));
     }
     catch(IOException e){
         e.printStackTrace();
@@ -50,5 +53,6 @@ public class CrawlBody {
     }
     
     System.out.println("Done");
-    }   
+    } 
+    }
 }
